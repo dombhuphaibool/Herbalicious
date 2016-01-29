@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="part_of_plant">
+        <item>@string/part_of_plant_root</item>
+        <item>@string/part_of_plant_whole</item>
+        <item>@string/part_of_plant_hint</item>
+    </string-array>
+
+    <string-array name="form_of_plant">
+        <item>@string/form_of_plant_fresh</item>
+        <item>@string/form_of_plant_dried</item>
+        <item>@string/form_of_plant_decoction</item>
+        <item>@string/form_of_plant_boiled</item>
+        <item>@string/form_of_plant_hint</item>
+    </string-array>
+
+    <string-array name="representation_of_plant">
+        <item>@string/representation_of_plant_actual</item>
+        <item>@string/representation_of_plant_picture</item>
+        <item>@string/representation_of_plant_hint</item>
+    </string-array>
+</resources>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Herbalicious</string>
+    <string name="herb_name">Herb name</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_herb_form_title">Add New Herb Form</string>
+    <string name="add_herb_form">Add</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="of">of</string>
+    <string name="word_separator">" "</string>
+
+    <string name="part_of_plant_hint"><i>Part</i></string>
+    <string name="part_of_plant_root">Root</string>
+    <string name="part_of_plant_whole">Whole Plant</string>
+
+    <string name="form_of_plant_hint"><i>Form</i></string>
+    <string name="form_of_plant_dried">Dried</string>
+    <string name="form_of_plant_fresh">Fresh</string>
+    <string name="form_of_plant_decoction">Decoction</string>
+    <string name="form_of_plant_boiled">Boiled</string>
+
+    <string name="representation_of_plant_hint"><i>Representation</i></string>
+    <string name="representation_of_plant_actual">Actual</string>
+    <string name="representation_of_plant_picture">Picture</string>
+</resources>

@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 'Google Inc.:Google APIs:23'
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.bandonleon.herbalicious"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "0.0.4"
+    }
+
+    signingConfigs {
+        release {
+            def releaseKeystore = "~/Dev/Android/bandonleon.keystore"
+            if (System.getenv("BANDONLEON_KEYSTORE") != null) {
+                releaseKeystore = System.getenv("BANDONLEON_KEYSTORE")
+            }
+            storeFile file(releaseKeystore)
+            storePassword System.getenv("BANDONLEON_KEYSTORE_PASS")
+            keyAlias "herbalicious"
+            keyPassword System.getenv("BANDONLEON_HERBALICIOUS_PASS")
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    String newName = "herbalicious-" + output.outputFile.name.replace(".apk", "-" +
+                            defaultConfig.versionName + ".apk")
+                    output.outputFile = new File(output.outputFile.parent, newName)
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.+'
+    compile 'com.android.support:design:23.+'
+}
