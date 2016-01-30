@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.bandonleon.herbalicious.HerbaliciousApplication;
 import com.bandonleon.herbalicious.adapter.HerbsListAdapter;
 import com.bandonleon.herbalicious.R;
 
@@ -46,13 +47,22 @@ public class MainActivity extends AppCompatActivity {
             mEmptyImage.setAlpha(0.4f);
         }
 
-        mHerbsListAdapter = new HerbsListAdapter();
+        HerbaliciousApplication app = (HerbaliciousApplication) getApplication();
+        mHerbsListAdapter = new HerbsListAdapter(app.getHerbCollection());
         mHerbsList = (RecyclerView) findViewById(R.id.herbs_list);
         if (mHerbsList != null) {
             mHerbsList.setHasFixedSize(true);
             mHerbsList.setLayoutManager(new LinearLayoutManager(this));
             mHerbsList.setAdapter(mHerbsListAdapter);
         }
+        updateViewVisibility();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mHerbsListAdapter.notifyDataSetChanged();
         updateViewVisibility();
     }
 
@@ -73,11 +83,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // @TODO: Remove call to startActivityForResult()...
+        /*
         if (requestCode == ADD_HERB_REQUEST && resultCode == RESULT_OK) {
             String herbName = data.getStringExtra(AddHerbActivity.ADD_HERB_EXTRA_NAME);
             mHerbsListAdapter.addItem(herbName);
             updateViewVisibility();
         }
+        */
     }
 
     /**********************************************************************************************

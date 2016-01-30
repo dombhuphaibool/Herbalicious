@@ -23,6 +23,9 @@ import android.widget.TextView;
 
 import com.bandonleon.herbalicious.R;
 import com.bandonleon.herbalicious.adapter.SpinnerHintAdapter;
+import com.bandonleon.herbalicious.model.HerbForm;
+
+import java.util.List;
 
 /**
  * Created by dombhuphaibool on 1/23/16.
@@ -31,7 +34,7 @@ public class AddHerbFormDialogFragment extends DialogFragment {
     public static final String TAG = "AddHerbFormDialogFragment";
 
     public interface AddHerbFormListener {
-        void onHerbFormAdded(String herbForm);
+        void onHerbFormAdded(HerbForm.Part part, HerbForm.Form form, HerbForm.Representation rep);
     }
 
     private static AddHerbFormListener mListener;
@@ -47,8 +50,7 @@ public class AddHerbFormDialogFragment extends DialogFragment {
         }
     }
 
-    private ArrayAdapter<String> createSpinnerAdapter(@ArrayRes int arrayResId) {
-        final String[] spinnerContent = getResources().getStringArray(arrayResId);
+    private ArrayAdapter<String> createSpinnerAdapter(final List<String> spinnerContent) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, spinnerContent) {
 
@@ -58,7 +60,7 @@ public class AddHerbFormDialogFragment extends DialogFragment {
                 if (position == getCount()) {
                     textView.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
                     textView.setText("");
-                    textView.setHint(spinnerContent[getCount()]);
+                    textView.setHint(spinnerContent.get(getCount()));
                 } else {
                     // textView.setBackgroundColor(getResources().getColor(R.color.colorSecondary));
                 }
@@ -92,15 +94,15 @@ public class AddHerbFormDialogFragment extends DialogFragment {
         final Spinner plantPartSpinner = (Spinner) dialogView.findViewById(R.id.plant_part_spinner);
         final Spinner plantFormSpinner = (Spinner) dialogView.findViewById(R.id.plant_form_spinner);
         final Spinner plantRepresentationSpinner = (Spinner) dialogView.findViewById(R.id.plant_representation_spinner);
-        final ArrayAdapter<String> partAdapter = createSpinnerAdapter(R.array.part_of_plant);
+        final ArrayAdapter<String> partAdapter = createSpinnerAdapter(HerbForm.Part.toStringList(activity));
         plantPartSpinner.setAdapter(partAdapter);
         plantPartSpinner.setSelection(partAdapter.getCount());
 
-        final ArrayAdapter<String> formAdapter = createSpinnerAdapter(R.array.form_of_plant);
+        final ArrayAdapter<String> formAdapter = createSpinnerAdapter(HerbForm.Form.toStringList(activity));
         plantFormSpinner.setAdapter(formAdapter);
         plantFormSpinner.setSelection(formAdapter.getCount());
 
-        final ArrayAdapter<String> representationAdapter = createSpinnerAdapter(R.array.representation_of_plant);
+        final ArrayAdapter<String> representationAdapter = createSpinnerAdapter(HerbForm.Representation.toStringList(activity));
         plantRepresentationSpinner.setAdapter(representationAdapter);
         plantRepresentationSpinner.setSelection(representationAdapter.getCount());
 
@@ -109,24 +111,12 @@ public class AddHerbFormDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.add_herb_form, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Resources res = getResources();
-                        StringBuilder sb = new StringBuilder();
-                        String wordSeparator = getString(R.string.word_separator);
                         int herbPartIdx = plantPartSpinner.getSelectedItemPosition();
                         int herbFormIdx = plantFormSpinner.getSelectedItemPosition();
                         int herbRepresentationIdx = plantRepresentationSpinner.getSelectedItemPosition();
-                        if (herbRepresentationIdx >= 1) {
-                            sb.append(res.getStringArray(R.array.representation_of_plant)[herbRepresentationIdx]);
-                            sb.append(wordSeparator).append(getString(R.string.of)).append(wordSeparator);
-                        }
-                        if (herbFormIdx >= 1) {
-                            sb.append(res.getStringArray(R.array.form_of_plant)[herbFormIdx]);
-                            sb.append(wordSeparator);
-                        }
-                        if (herbPartIdx >= 0) {
-                            sb.append(res.getStringArray(R.array.part_of_plant)[herbPartIdx]);
-                        }
-                        mListener.onHerbFormAdded(sb.toString());
+                        mListener.onHerbFormAdded(HerbForm.Part.values()[herbPartIdx],
+                                HerbForm.Form.values()[herbFormIdx],
+                                HerbForm.Representation.values()[herbRepresentationIdx]);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

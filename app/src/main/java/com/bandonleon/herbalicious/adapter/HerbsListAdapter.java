@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bandonleon.herbalicious.R;
+import com.bandonleon.herbalicious.model.HerbCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private HerbCollection mHerbCollection;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -27,11 +28,8 @@ public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.View
         }
     }
 
-    private int mNumItems;
-
-    public HerbsListAdapter() {
-        mNumItems = 0;
-        mData = new ArrayList<>();
+    public HerbsListAdapter(HerbCollection herbCollection) {
+        mHerbCollection = herbCollection;
     }
 
     @Override
@@ -42,22 +40,12 @@ public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.View
 
     @Override
     public void onBindViewHolder(HerbsListAdapter.ViewHolder holder, int position) {
-        holder.mHerbName.setText(mData.get(position) + ", herb #" + String.valueOf(mNumItems - position));
+        // holder.mHerbName.setText(mData.get(position) + ", herb #" + String.valueOf(mNumItems - position));
+        holder.mHerbName.setText(mHerbCollection.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return mNumItems;
-    }
-
-    public void incrementItemCount() {
-        mNumItems ++;
-        // notifyItemInserted(mNumItems - 1);
-        notifyDataSetChanged();
-    }
-
-    public void addItem(String name) {
-        mData.add(name);
-        incrementItemCount();
+        return mHerbCollection.size();
     }
 }

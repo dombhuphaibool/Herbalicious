@@ -1,5 +1,6 @@
 package com.bandonleon.herbalicious.adapter;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bandonleon.herbalicious.R;
+import com.bandonleon.herbalicious.model.Herb;
 
 import java.util.List;
 
@@ -25,10 +27,16 @@ public class HerbFormsAdapter extends RecyclerView.Adapter<HerbFormsAdapter.View
         }
     }
 
-    private List<String> mData;
+    private Resources mRes;
+    private Herb mHerb;
 
-    public HerbFormsAdapter(List<String> data) {
-        mData = data;
+    public HerbFormsAdapter(Resources res, Herb herb) {
+        mRes = res;
+        load(herb);
+    }
+
+    public void load(Herb herb) {
+        mHerb = herb;
     }
 
     @Override
@@ -40,11 +48,11 @@ public class HerbFormsAdapter extends RecyclerView.Adapter<HerbFormsAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.herbFormNameTxt.setText(mData.get(position));
+        holder.herbFormNameTxt.setText(mHerb.getForms().get(position).toString(mRes));
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return mHerb != null ? mHerb.getForms().size() : 0;
     }
 }
