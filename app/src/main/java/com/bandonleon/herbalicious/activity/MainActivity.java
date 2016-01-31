@@ -17,7 +17,7 @@ import com.bandonleon.herbalicious.adapter.HerbsListAdapter;
 import com.bandonleon.herbalicious.R;
 import com.bandonleon.herbalicious.model.Herb;
 
-public class MainActivity extends AppCompatActivity implements HerbsListAdapter.OnClickListener {
+public class MainActivity extends AppCompatActivity implements HerbsListAdapter.OnHerbClickListener {
     private static final int ADD_HERB_REQUEST = 1;
 
     private RecyclerView mHerbsList;
@@ -68,11 +68,6 @@ public class MainActivity extends AppCompatActivity implements HerbsListAdapter.
         updateViewVisibility();
     }
 
-    private void onActionPerformAddHerb() {
-        Intent addHerbIntent = new Intent(this, AddHerbActivity.class);
-        startActivityForResult(addHerbIntent, ADD_HERB_REQUEST);
-    }
-
     private void updateViewVisibility() {
         if (mHerbsListAdapter.getItemCount() > 0) {
             mEmptyImage.setVisibility(View.GONE);
@@ -81,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements HerbsListAdapter.
             mEmptyImage.setVisibility(View.VISIBLE);
             mHerbsList.setVisibility(View.GONE);
         }
+    }
+
+    private void onActionPerformAddHerb() {
+        Intent addHerbIntent = new Intent(this, AddHerbActivity.class);
+        startActivityForResult(addHerbIntent, ADD_HERB_REQUEST);
     }
 
     @Override
@@ -97,13 +97,11 @@ public class MainActivity extends AppCompatActivity implements HerbsListAdapter.
     }
 
     /**
-     * HerbsListAdapter.OnClickListener interface
+     * HerbsListAdapter.OnHerbClickListener interface
      */
     @Override
-    public void onItemClick(int position) {
-        // @TODO: Fix this. Do not explicitly link id to list position!!!
-        int herbId = mHerbsListAdapter.getItemCount() - 1 - position;
-        SensesActivity.start(this, herbId);
+    public void onHerbClick(Herb herb) {
+        SensesActivity.start(this, herb.getId());
     }
 
     /**********************************************************************************************

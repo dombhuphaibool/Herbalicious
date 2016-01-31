@@ -20,17 +20,16 @@ public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.View
         Herb getAtPosition(int position);
     }
 
-    public interface OnClickListener {
-        void onItemClick(int position);
+    public interface OnHerbClickListener {
+        void onHerbClick(Herb herb);
     }
 
     private HerbList mHerbList;
-    private OnClickListener mListener;
+    private OnHerbClickListener mListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView mHerbName;
-        int mPosition;
 
         public ViewHolder(View rootView) {
             super(rootView);
@@ -42,7 +41,7 @@ public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.View
         mHerbList = herbList;
     }
 
-    public void setOnClickListener(OnClickListener listener) {
+    public void setOnClickListener(OnHerbClickListener listener) {
         mListener = listener;
     }
 
@@ -53,7 +52,7 @@ public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.View
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notifyOnItemClick(viewHolder.mPosition);
+                notifyOnItemClick(viewHolder.getLayoutPosition());
             }
         });
         return viewHolder;
@@ -63,7 +62,6 @@ public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.View
     public void onBindViewHolder(HerbsListAdapter.ViewHolder holder, int position) {
         holder.mHerbName.setText(mHerbList.getAtPosition(position).getName() +
                 ", herb #" + String.valueOf(mHerbList.size() - position));
-        holder.mPosition = position;
     }
 
     @Override
@@ -73,7 +71,7 @@ public class HerbsListAdapter extends RecyclerView.Adapter<HerbsListAdapter.View
 
     private void notifyOnItemClick(int position) {
         if (mListener != null) {
-            mListener.onItemClick(position);
+            mListener.onHerbClick(mHerbList.getAtPosition(position));
         }
     }
 }

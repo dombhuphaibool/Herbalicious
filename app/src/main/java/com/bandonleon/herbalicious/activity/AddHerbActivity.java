@@ -36,6 +36,8 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
     private static final String ADD_HERB_RESULT = "com.bandonleon.herbalicious.ACTIVITY_RESULT";
     public static final String ADD_HERB_EXTRA_HERB_ID = "com.bandonleon.herbalicious.ADD_HERB_EXTRA_HERB_ID";
 
+    private static final String DEFAULT_INPUT_HERB_NAME = "New herb";
+
     private HerbFormsAdapter mHerbFormsAdapter;
     private FloatingActionButton mFabDone;
     private EditText mHerbNameTxt;
@@ -101,13 +103,7 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
         mFabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String herbName = "New herb";
-                if (mHerbNameTxt != null) {
-                    String textInput = mHerbNameTxt.getText().toString();
-                    if (!TextUtils.isEmpty(textInput)) {
-                        herbName = textInput;
-                    }
-                }
+                mHerb.setName(getInputHerbName());
                 mHerb.save();
                 onPerformActionDone(mHerb.getId());
             }
@@ -135,13 +131,24 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
     public void onHerbFormAdded(HerbForm.Part part, HerbForm.Form form, HerbForm.Representation rep) {
 
         if (mHerb == null) {
-            mHerb = mHerbCollection.addHerb(mHerbNameTxt.getText().toString());
+            mHerb = mHerbCollection.addHerb(getInputHerbName());
             mHerbFormsAdapter.load(mHerb);
         }
         mHerb.addForm(part, form, rep);
         mHerbFormsAdapter.notifyItemInserted(mHerb.getForms().size() - 1);
 
         mFabDone.setVisibility(mHerbFormsAdapter.getItemCount() > 0 ? View.VISIBLE : View.GONE);
+    }
+
+    private String getInputHerbName() {
+        String herbName = DEFAULT_INPUT_HERB_NAME;
+        if (mHerbNameTxt != null) {
+            String textInput = mHerbNameTxt.getText().toString();
+            if (!TextUtils.isEmpty(textInput)) {
+                herbName = textInput;
+            }
+        }
+        return herbName;
     }
 
     private void onPerformActionAddHerbForm() {
