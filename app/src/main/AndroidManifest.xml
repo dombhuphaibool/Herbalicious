@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.AddHerbActivity"/>
+        <activity android:name=".activity.SensesActivity"/>
     </application>
 
 </manifest>

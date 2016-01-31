@@ -15,8 +15,9 @@ import android.widget.ImageView;
 import com.bandonleon.herbalicious.HerbaliciousApplication;
 import com.bandonleon.herbalicious.adapter.HerbsListAdapter;
 import com.bandonleon.herbalicious.R;
+import com.bandonleon.herbalicious.model.Herb;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HerbsListAdapter.OnClickListener {
     private static final int ADD_HERB_REQUEST = 1;
 
     private RecyclerView mHerbsList;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         HerbaliciousApplication app = (HerbaliciousApplication) getApplication();
         mHerbsListAdapter = new HerbsListAdapter(app.getHerbCollection());
+        mHerbsListAdapter.setOnClickListener(this);
         mHerbsList = (RecyclerView) findViewById(R.id.herbs_list);
         if (mHerbsList != null) {
             mHerbsList.setHasFixedSize(true);
@@ -84,13 +86,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // @TODO: Remove call to startActivityForResult()...
-        /*
         if (requestCode == ADD_HERB_REQUEST && resultCode == RESULT_OK) {
-            String herbName = data.getStringExtra(AddHerbActivity.ADD_HERB_EXTRA_NAME);
-            mHerbsListAdapter.addItem(herbName);
-            updateViewVisibility();
+            int herbId = data.getIntExtra(AddHerbActivity.ADD_HERB_EXTRA_HERB_ID, Herb.INVALID_ID);
+            if (herbId != Herb.INVALID_ID) {
+                SensesActivity.start(this, herbId);
+            } else {
+                updateViewVisibility();
+            }
         }
-        */
+    }
+
+    /**
+     * HerbsListAdapter.OnClickListener interface
+     */
+    @Override
+    public void onItemClick(int position) {
+        // @TODO: Fix this. Do not explicitly link id to list position!!!
+        int herbId = mHerbsListAdapter.getItemCount() - 1 - position;
+        SensesActivity.start(this, herbId);
     }
 
     /**********************************************************************************************

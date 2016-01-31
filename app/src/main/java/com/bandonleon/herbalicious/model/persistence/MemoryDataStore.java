@@ -16,7 +16,6 @@ import java.util.Set;
  */
 public class MemoryDataStore implements HerbDataStore {
     private List<Herb> mHerbs;
-    // private Map<Herb, List<HerbForm>> mHerbForms;
     private Map<Herb, Set<HerbForm>> mHerbForms;
 
     public MemoryDataStore() {
@@ -29,21 +28,25 @@ public class MemoryDataStore implements HerbDataStore {
         return new ArrayList<>(mHerbs);
     }
 
+    private int getHerbPosInList(int herbId) {
+        return mHerbs.size() - 1 - herbId;
+    }
+
     @Override
     public int saveHerb(Herb herb) {
         int herbId = herb.getId();
         if (herbId == Herb.INVALID_ID) {
             herbId = mHerbs.size();
-            mHerbs.add(herb);
+            mHerbs.add(0, herb);
         } else {
-            mHerbs.set(herbId, herb);
+            mHerbs.set(getHerbPosInList(herbId), herb);
         }
         return herbId;
     }
 
     @Override
     public Herb getHerbById(int id) {
-        return mHerbs.get(id);
+        return mHerbs.get(getHerbPosInList(id));
     }
 
     @Override

@@ -34,7 +34,7 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
     private static final String ADD_HERB_EXTRA_ID = "com.bandonleon.herbalicious.ADD_HERB_EXTRA_ID";
 
     private static final String ADD_HERB_RESULT = "com.bandonleon.herbalicious.ACTIVITY_RESULT";
-    public static final String ADD_HERB_EXTRA_NAME = "com.bandonleon.herbalicious.ADD_HERB_EXTRA_NAME";
+    public static final String ADD_HERB_EXTRA_HERB_ID = "com.bandonleon.herbalicious.ADD_HERB_EXTRA_HERB_ID";
 
     private HerbFormsAdapter mHerbFormsAdapter;
     private FloatingActionButton mFabDone;
@@ -42,6 +42,14 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
 
     private HerbCollection mHerbCollection;
     private Herb mHerb;
+
+    private void clearFocusAndHideInput(EditText editText) {
+        // Clear the input focus
+        editText.clearFocus();
+        // Hide the soft keyboard
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,28 +67,25 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
 
         setContentView(R.layout.activity_add_herb);
 
-        FloatingActionButton fabAddForm = (FloatingActionButton) findViewById(R.id.fab_add_form);
-        fabAddForm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onPerformActionAddHerbForm();
-            }
-        });
-
         mHerbNameTxt = (EditText) findViewById(R.id.herb_name_txt);
         mHerbNameTxt.setSingleLine(true);
         mHerbNameTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (v == mHerbNameTxt && actionId == EditorInfo.IME_ACTION_DONE) {
-                    // Clear the input focus
-                    mHerbNameTxt.clearFocus();
-                    // Hide the soft keyboard
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mHerbNameTxt.getWindowToken(), 0);
+                    clearFocusAndHideInput(mHerbNameTxt);
                     return true;
                 }
                 return false;
+            }
+        });
+
+        FloatingActionButton fabAddForm = (FloatingActionButton) findViewById(R.id.fab_add_form);
+        fabAddForm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearFocusAndHideInput(mHerbNameTxt);
+                onPerformActionAddHerbForm();
             }
         });
 
@@ -103,7 +108,8 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
                         herbName = textInput;
                     }
                 }
-                onPerformActionDone(herbName);
+                mHerb.save();
+                onPerformActionDone(mHerb.getId());
             }
         });
         mFabDone.setVisibility(mHerbFormsAdapter.getItemCount() > 0 ? View.VISIBLE : View.GONE);
@@ -143,9 +149,9 @@ public class AddHerbActivity extends FragmentActivity implements AddHerbFormList
         dialog.show(getSupportFragmentManager(), AddHerbFormDialogFragment.TAG);
     }
 
-    private void onPerformActionDone(String herbName) {
+    private void onPerformActionDone(int herbId) {
         Intent result = new Intent(ADD_HERB_RESULT);
-        result.putExtra(ADD_HERB_EXTRA_NAME, herbName);
+        result.putExtra(ADD_HERB_EXTRA_HERB_ID, herbId);
         setResult(RESULT_OK, result);
         finish();
     }
